@@ -26,7 +26,8 @@
         android:id="@+id/btnMessage"
         android:layout_width="54dp"
         android:layout_height="45dp"
-        tools:layout_editor_absoluteX="278dp"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintStart_toEndOf="@+id/btnSearch"
         tools:layout_editor_absoluteY="2dp" />
 
     <!-- Bottom Navigation -->

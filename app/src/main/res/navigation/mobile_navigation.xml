@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
+        android:id="@+id/navigation_message"
+        android:name="com.example.myapplication.ui.message.MessageFragment"
+        android:label="@string/title_messenger"
+        tools:layout="@layout/fragment_message" />
+
+    <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.myapplication.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
