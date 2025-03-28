@@ -4,52 +4,91 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.myapplication.Emtity.Message;
+
 import com.example.myapplication.R;
+import com.example.myapplication.Emtity.Message;
+
 import java.util.List;
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
+public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int VIEW_TYPE_LEFT = 0;
+    private static final int VIEW_TYPE_RIGHT = 1;
     private List<Message> messages;
+    private int currentUserId;  // ID của user hiện tại
     private OnItemClickListener listener;
 
-    public interface OnItemClickListener {
-        void onItemClick(Message message);
+
+    public MessageAdapter(List<Message> messages, int currentUserId, OnItemClickListener listener) {
+        this.messages = messages;
+        this.currentUserId = currentUserId;
+        this.listener = listener;
     }
 
-    public MessageAdapter(List<Message> messages, OnItemClickListener listener) {
-        this.messages = messages;
-        this.listener = listener;
+
+    @Override
+    public int getItemViewType(int position) {
+        Message message = messages.get(position);
+        return (message.getSenderId() == currentUserId) ? VIEW_TYPE_RIGHT : VIEW_TYPE_LEFT;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message, parent, false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_RIGHT) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_right, parent, false);
+            return new RightMessageViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_left, parent, false);
+            return new LeftMessageViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Message message = messages.get(position);
-        holder.txtUserName.setText("User " + message.getSenderId());
-        holder.txtLastMessage.setText(message.getContent());
-        holder.itemView.setOnClickListener(v -> listener.onItemClick(message));
+        if (holder instanceof RightMessageViewHolder) {
+            ((RightMessageViewHolder) holder).tvMessage.setText(message.getContent());
+        } else {
+            ((LeftMessageViewHolder) holder).tvMessage.setText(message.getContent());
+        }
+
+        // Gán sự kiện click cho itemView
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(message);
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {
         return messages.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtUserName, txtLastMessage;
+    static class LeftMessageViewHolder extends RecyclerView.ViewHolder {
+        TextView tvMessage;
 
-        public ViewHolder(@NonNull View itemView) {
+        LeftMessageViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtUserName = itemView.findViewById(R.id.txtUserName);
-            txtLastMessage = itemView.findViewById(R.id.txtLastMessage);
+            tvMessage = itemView.findViewById(R.id.tvMessageLeft);
         }
     }
+
+    static class RightMessageViewHolder extends RecyclerView.ViewHolder {
+        TextView tvMessage;
+
+        RightMessageViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvMessage = itemView.findViewById(R.id.tvMessageRight);
+        }
+    }
+    public interface OnItemClickListener {
+        void onItemClick(Message message);
+    }
+
 }

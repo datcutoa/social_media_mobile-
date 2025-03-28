@@ -22,14 +22,14 @@
         app:title="Thread"
         tools:layout_editor_absoluteX="0dp" />
 
-    <Button
-        android:id="@+id/btnMessage"
-        android:layout_width="54dp"
-        android:layout_height="45dp"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar"
-        app:layout_constraintStart_toEndOf="@+id/btnSearch"
-        tools:layout_editor_absoluteY="2dp" />
 
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation" />
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -38,27 +38,40 @@
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu"
+        android:layout_gravity="bottom"
         tools:layout_editor_absoluteX="0dp" />
 
-    <Button
-        android:id="@+id/btnSearch"
-        android:layout_width="54dp"
-        android:layout_height="45dp"
-        app:iconTint="#1B1A1A"
-        tools:layout_editor_absoluteX="214dp"
-        tools:layout_editor_absoluteY="2dp" />
 
-    <ScrollView
-        android:layout_width="409dp"
-        android:layout_height="617dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="57dp">
-
-        <LinearLayout
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" />
-    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--<ScrollView-->
+<!--android:layout_width="409dp"-->
+<!--android:layout_height="617dp"-->
+<!--tools:layout_editor_absoluteX="1dp"-->
+<!--tools:layout_editor_absoluteY="57dp"-->
+<!--tools:ignore="MissingConstraints">-->
+
+<!--<LinearLayout-->
+
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:orientation="horizontal" />-->
+<!--</ScrollView>-->
+
+<!--<Button-->
+<!--android:id="@+id/btnMessage"-->
+<!--android:layout_width="54dp"-->
+<!--android:layout_height="45dp"-->
+<!--app:layout_constraintEnd_toEndOf="@+id/toolbar"-->
+<!--app:layout_constraintStart_toEndOf="@+id/btnSearch"-->
+<!--tools:layout_editor_absoluteY="2dp" />-->
+
+
+<!--<Button-->
+<!--android:id="@+id/btnSearch"-->
+<!--android:layout_width="54dp"-->
+<!--android:layout_height="45dp"-->
+<!--app:iconTint="#1B1A1A"-->
+<!--tools:layout_editor_absoluteX="214dp"-->
+<!--tools:layout_editor_absoluteY="2dp" />-->
