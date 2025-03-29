@@ -46,12 +46,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-//    implementation ("org.projectlombok:lombok:1.18.22")
-//    annotationProcessor ("org.projectlombok:lombok:1.18.22")
     implementation("androidx.recyclerview:recyclerview:1.4.0")
     // Room Database
     implementation("androidx.room:room-runtime:2.5.2")
     annotationProcessor("androidx.room:room-compiler:2.5.2")
     implementation("androidx.room:room-ktx:2.5.0")
 
+    // Glide for image loading
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 }
+

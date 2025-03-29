@@ -13,7 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.myapplication.DAO.UserDao;
 import com.example.myapplication.Emtity.Message;
+import com.example.myapplication.Emtity.User;
 import com.example.myapplication.R;
 import com.example.myapplication.data.DataManager;
 import com.example.myapplication.ui.chat.ChatActivity;
@@ -22,6 +24,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +35,8 @@ public class MessageFragment extends Fragment {
     private static final int REQUEST_CODE_CHAT = 1001;
     private RecyclerView recyclerView;
     private MessageListAdapter adapter;
-    private int currentUserId = 1001; // ID của user đang đăng nhập
+    private int currentUserId = DataManager.getInstance().getUsers().get(0).getId();
+
 
     public MessageFragment() { }
 
@@ -50,6 +54,7 @@ public class MessageFragment extends Fragment {
             Intent intent = new Intent(requireContext(), ChatActivity.class);
             intent.putExtra("currentUserId", currentUserId);
             intent.putExtra("receiverId", componentMessage.getUserId());
+            intent.putExtra("nameReceiver",DataManager.getInstance().getUserById(componentMessage.getUserId()).getName());
             // Nếu cần gửi thêm dữ liệu (ở đây bạn có thể không cần gửi lại vì DataManager giữ dữ liệu)
             startActivityForResult(intent, REQUEST_CODE_CHAT);
         });
@@ -69,7 +74,6 @@ public class MessageFragment extends Fragment {
             // Cập nhật dữ liệu cho adapter
             adapter.setData(updatedConversationList);
 
-            extractLastMessages(updatedMessages);
         }
     }
 
@@ -99,10 +103,14 @@ public class MessageFragment extends Fragment {
         for (Map.Entry<Integer, Message> entry : lastMessageMap.entrySet()) {
             int userId = entry.getKey();
             Message lastMsg = entry.getValue();
+            String profilePic = ((DataManager.getInstance().getUserById(userId).getProfilePicture() == null ||
+                    DataManager.getInstance().getUserById(userId).getProfilePicture().isEmpty()))
+                    ? "defaultuser"
+                    : DataManager.getInstance().getUserById(userId).getProfilePicture();
             result.add(new ComponentMessage(
                     userId,
-                    "User " + userId,
-                    "https://example.com/avatar/" + userId + ".png",
+                    DataManager.getInstance().getUserById(userId).getName(),
+                    profilePic,
                     lastMsg.getContent(),
                     lastMsg.getCreatedAt()
             ));

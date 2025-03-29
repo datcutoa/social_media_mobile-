@@ -36,6 +36,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private int currentUserId;
     private int receiverId;
+    private String nameReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class ChatActivity extends AppCompatActivity {
         // Lấy dữ liệu từ Intent
         currentUserId = getIntent().getIntExtra("currentUserId", -1);
         receiverId = getIntent().getIntExtra("receiverId", -1);
+        nameReceiver=getIntent().getStringExtra("nameReceiver");
 
         if (currentUserId == -1 || receiverId == -1) {
             finish();
@@ -58,7 +60,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         // Hiển thị tên receiver (ở đây bạn có thể lấy tên từ DataManager hoặc truyền qua Intent)
-        tvReceiverName.setText("" + receiverId);
+        tvReceiverName.setText("" + nameReceiver);
 
         btnBack.setOnClickListener(v -> finish()); // Quay lại MessageFragment
 

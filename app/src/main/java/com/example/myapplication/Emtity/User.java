@@ -19,6 +19,21 @@ public class User {
     private String gender;
     private String birthdate;
     private String createdAt;
+    public  User(){}
+
+    public User(int id,String username, String password, String email,  String name, String bio, String coverPhoto, String profilePicture, String gender, String birthdate, String createdAt) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.id = id;
+        this.name = name;
+        this.bio = bio;
+        this.coverPhoto = coverPhoto;
+        this.profilePicture = profilePicture;
+        this.gender = gender;
+        this.birthdate = birthdate;
+        this.createdAt = createdAt;
+    }
 
     public int getId() {
         return id;
