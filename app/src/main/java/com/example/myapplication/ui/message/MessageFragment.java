@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.message;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -13,16 +15,21 @@ import android.view.ViewGroup;
 
 import com.example.myapplication.Emtity.Message;
 import com.example.myapplication.R;
+import com.example.myapplication.data.DataManager;
 import com.example.myapplication.ui.chat.ChatActivity;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-// Fragment hiển thị danh sách cuộc trò chuyện
 public class MessageFragment extends Fragment {
+    private static final int REQUEST_CODE_CHAT = 1001;
     private RecyclerView recyclerView;
     private MessageListAdapter adapter;
     private int currentUserId = 1001; // ID của user đang đăng nhập
@@ -33,45 +40,58 @@ public class MessageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_message, container, false);
         recyclerView = root.findViewById(R.id.recyclerMessages);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Lấy danh sách tin nhắn
-        List<Message> messages = getSampleMessages();
+        // Lấy danh sách tin nhắn từ DataManager
+        List<Message> messages = DataManager.getInstance().getMessages();
         List<ComponentMessage> conversationList = extractLastMessages(messages);
 
         adapter = new MessageListAdapter(conversationList, componentMessage -> {
-            Log.d("MessageFragment", "User clicked: " + componentMessage.getName());
             Intent intent = new Intent(requireContext(), ChatActivity.class);
             intent.putExtra("currentUserId", currentUserId);
             intent.putExtra("receiverId", componentMessage.getUserId());
-            intent.putExtra("messages",(Serializable) getSampleMessages());
-            startActivity(intent);
+            // Nếu cần gửi thêm dữ liệu (ở đây bạn có thể không cần gửi lại vì DataManager giữ dữ liệu)
+            startActivityForResult(intent, REQUEST_CODE_CHAT);
         });
 
         recyclerView.setAdapter(adapter);
         return root;
     }
 
-    private List<Message> getSampleMessages() {
-        List<Message> msgs = new ArrayList<>();
-        msgs.add(new Message(1, 1001, 1002, "Hello 1002", true, "2024-03-21"));
-        msgs.add(new Message(2, 1003, 1001, "How are you 1001?", false, "2024-03-21"));
-        msgs.add(new Message(3, 1001, 1003, "I'm good 1003!", false, "2024-03-22"));
-        msgs.add(new Message(4, 1004, 1001, "Hey, what's up?", false, "2024-03-20"));
-        msgs.add(new Message(5, 1002, 1001, "Hello earliest 1001", true, "2024-03-23"));
-        return msgs;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_CHAT && resultCode == RESULT_OK && data != null) {
+            // Lấy lại danh sách tin nhắn cập nhật từ DataManager
+            List<Message> updatedMessages = DataManager.getInstance().getMessages();
+            // Xây dựng lại conversation list từ tin nhắn cập nhật
+            List<ComponentMessage> updatedConversationList = extractLastMessages(updatedMessages);
+            // Cập nhật dữ liệu cho adapter
+            adapter.setData(updatedConversationList);
+
+            extractLastMessages(updatedMessages);
+        }
     }
 
     private List<ComponentMessage> extractLastMessages(List<Message> messages) {
         Map<Integer, Message> lastMessageMap = new HashMap<>();
+        // Khởi tạo SimpleDateFormat với định dạng "yyyy-MM-dd"
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
         for (Message msg : messages) {
             int otherUserId = (msg.getSenderId() == currentUserId) ? msg.getReceiverId() : msg.getSenderId();
+            // Lấy đối tượng Date của tin nhắn
+            Date msgDate = parseDate(sdf, msg.getCreatedAt());
 
-            // Cập nhật tin nhắn mới nhất dựa vào thời gian
-            if (!lastMessageMap.containsKey(otherUserId) ||
-                    msg.getCreatedAt().compareTo(lastMessageMap.get(otherUserId).getCreatedAt()) > 0) {
+            // Nếu chưa có tin nhắn nào của user đó, hoặc tin nhắn hiện tại mới hơn tin cũ thì cập nhật
+            if (!lastMessageMap.containsKey(otherUserId)) {
                 lastMessageMap.put(otherUserId, msg);
+            } else {
+                Message existingMsg = lastMessageMap.get(otherUserId);
+                Date existingDate = parseDate(sdf, existingMsg.getCreatedAt());
+                if (msgDate != null && existingDate != null && msgDate.after(existingDate)) {
+                    lastMessageMap.put(otherUserId, msg);
+                }
             }
         }
 
@@ -79,7 +99,6 @@ public class MessageFragment extends Fragment {
         for (Map.Entry<Integer, Message> entry : lastMessageMap.entrySet()) {
             int userId = entry.getKey();
             Message lastMsg = entry.getValue();
-
             result.add(new ComponentMessage(
                     userId,
                     "User " + userId,
@@ -90,4 +109,15 @@ public class MessageFragment extends Fragment {
         }
         return result;
     }
+
+    // Hàm chuyển đổi chuỗi sang Date
+    private Date parseDate(SimpleDateFormat sdf, String dateString) {
+        try {
+            return sdf.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

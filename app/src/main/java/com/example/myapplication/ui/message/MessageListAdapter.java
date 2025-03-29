@@ -45,7 +45,6 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         // Gán sự kiện click vào itemView
         holder.itemView.setOnClickListener(v -> {
             Log.d("MessageListAdapter", "Click event triggered at position: " + position);
-            Toast.makeText(v.getContext(), "Item clicked at position: " + position, Toast.LENGTH_SHORT).show();
             if (listener != null) {
                 listener.onItemClick(item);
             }
@@ -65,6 +64,12 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     public int getItemCount() {
         return data.size();
     }
+
+    public void setData(List<ComponentMessage> newData) {
+        this.data = newData;
+        notifyDataSetChanged();
+    }
+
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProfile;
