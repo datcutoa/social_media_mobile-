@@ -21,6 +21,16 @@
             android:name=".MainActivity"
             android:exported="true"
           >
+          
+        <!-- Profile Activity -->
+        <activity
+            android:name=".ui.ProfileActivity"
+            android:exported="true"/>
+        <activity android:name=".ui.NewPost"
+            android:exported="true"/>
+        <activity android:name=".ui.FocusPost"
+            android:exported="true"/>
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

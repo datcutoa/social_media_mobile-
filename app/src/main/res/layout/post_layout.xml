@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
+
+    <!-- Nút Close ở góc trên bên trái -->
+    <Button
+        android:id="@+id/btnClose"
+        android:layout_width="34dp"
+        android:layout_height="26dp"
+        android:layout_margin="12dp"
+        android:background="@drawable/close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Nút Đăng ở góc trên bên phải -->
+    <Button
+        android:id="@+id/btnPost"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_margin="12dp"
+        android:text="Đăng"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:background="@color/blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Tiêu đề nằm chính giữa giữa nút Đóng và nút Đăng -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Tạo bài viết"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/btnClose"
+        app:layout_constraintEnd_toStartOf="@id/btnPost"
+        app:layout_constraintTop_toTopOf="@id/btnClose"
+        app:layout_constraintBottom_toBottomOf="@id/btnClose"
+        app:layout_constraintHorizontal_bias="0.5" />
+
+    <!-- Hộp nhập nội dung mở rộng chiều cao, tự nhiên -->
+    <EditText
+        android:id="@+id/edtPostContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="16dp"
+        android:background="@null"
+        android:gravity="top"
+        android:hint="Bạn đang nghĩ gì?"
+        android:inputType="textMultiLine"
+        android:maxLines="6"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtTitle"
+        app:layout_constraintBottom_toTopOf="@id/toolbar" />
+
+    <!-- Thanh công cụ ở dưới hộp nhập nội dung -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/btnAddImage"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:contentDescription="Thêm ảnh"
+            android:src="@drawable/addimage" />
+
+        <ImageView
+            android:id="@+id/btnTagFriends"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:contentDescription="Gắn thẻ bạn bè"
+            android:src="@drawable/tagfriend" />
+
+        <ImageView
+            android:id="@+id/btnFeeling"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:contentDescription="Cảm xúc"
+            android:src="@drawable/feeling" />
+
+        <ImageView
+            android:id="@+id/btnLocation"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:contentDescription="Thêm vị trí"
+            android:src="@drawable/location" />
+
+        <ImageView
+            android:id="@+id/btnGif"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:contentDescription="Thêm GIF"
+            android:src="@drawable/gif" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

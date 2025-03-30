@@ -1,26 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp"
-    android:background="@android:color/white"
-    android:layout_marginBottom="8dp"> <!-- Tạo khoảng cách giữa các bài viết -->
+    android:background="@android:color/white">
 
+    <!-- Thanh tiêu đề chứa nút quay lại -->
     <LinearLayout
-        android:id="@+id/itempost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:padding="12dp"
         android:gravity="center_vertical">
+
+        <Button
+            android:padding="5dp"
+            android:id="@+id/btnBack"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Bài viết"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+    <!-- Thông tin người đăng -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
         <ImageView
             android:id="@+id/imgUserAvatar"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:scaleType="centerCrop"
-
-            android:background="@drawable/circle_shape"
-            />
+            android:background="@drawable/circle_shape" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -32,42 +57,45 @@
                 android:id="@+id/txtUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
                 android:text="Tên người dùng"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/txtTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
                 android:text="Thời gian"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textColor="@android:color/darker_gray"/>
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Nội dung bài viết -->
     <TextView
         android:id="@+id/txtContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
         android:text="Nội dung bài viết"
-        android:paddingTop="5dp" />
+        android:padding="12dp"
+        android:textSize="16sp"/>
 
+    <!-- Ảnh bài viết (nếu có) -->
     <ImageView
         android:id="@+id/imgPost"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:scaleType="centerCrop"
-        android:layout_marginTop="5dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        
+        android:layout_marginBottom="8dp"/>
 
     <!-- Thanh chứa các nút Like, Comment -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="8dp"
+        android:padding="12dp"
         android:gravity="center">
 
         <ImageView
@@ -75,16 +103,14 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/like"
-            android:padding="5dp"
-             />
+            android:padding="5dp" />
 
         <TextView
             android:id="@+id/txtLikeCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="172"
-            android:paddingStart="4dp" />
+            android:text="114"
+            android:paddingStart="4dp"/>
 
         <ImageView
             android:id="@+id/btnComment"
@@ -92,16 +118,13 @@
             android:layout_height="24dp"
             android:src="@drawable/comment"
             android:padding="5dp"
-
             android:layout_marginStart="16dp" />
 
         <TextView
             android:id="@+id/txtCommentCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
             android:text="23"
-            android:paddingStart="4dp" />
+            android:paddingStart="4dp"/>
     </LinearLayout>
 </LinearLayout>
-
