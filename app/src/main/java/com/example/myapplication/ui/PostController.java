@@ -2,6 +2,7 @@ package com.example.myapplication.ui;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,8 +16,8 @@ public class PostController extends AppCompatActivity   {
         SocialNetworkDatabase db= SocialNetworkDatabase.getInstance(this);
         User user;
         user=db.userDao().getUserById(3);
-       ImageView imgAvata =findViewById(R.id.imgAvatar);
-       View userName= findViewById(R.id.tvUsername);
+        ImageView imgAvata = findViewById(R.id.imgUserAvatar);
+        TextView userName= findViewById(R.id.txtUserName);
 
 
 
