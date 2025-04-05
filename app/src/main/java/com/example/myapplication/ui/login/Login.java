@@ -58,6 +58,10 @@ public class Login extends AppCompatActivity {
             User user = userDao.login(username, password);
             runOnUiThread(() -> {
                 if (user != null) {
+                    getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                            .edit()
+                            .putInt("userId", user.getId())
+                            .apply();
                     Toast.makeText(Login.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Login.this, MainActivity.class);
                     startActivity(intent);

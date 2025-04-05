@@ -1,6 +1,4 @@
-package com.example.myapplication.ui;
-
-import static androidx.core.content.ContextCompat.startActivity;
+package com.example.myapplication.ui.post;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -30,7 +28,7 @@ import java.util.concurrent.Executors;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private List<Post> postList;
     private SocialNetworkDatabase db;
-     private static LinearLayout itemPost;
+    private static LinearLayout itemPost;
     public PostAdapter(List<Post> postList, SocialNetworkDatabase database) {
         this.postList = postList;
         this.db = database;
@@ -46,7 +44,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post = postList.get(position);
-
+        holder.bind(post);
         // Load thông tin người dùng trong background thread
         Executors.newSingleThreadExecutor().execute(() -> {
             UserDao userDao = db.userDao();
@@ -124,6 +122,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public static class PostViewHolder extends RecyclerView.ViewHolder {
         ImageView userAvatar, postImage, btnLike, btnComment;
         TextView userName, time, content, commentCount;
+        private Post currentPost;
 
 
         public PostViewHolder(@NonNull View itemView) {
@@ -133,13 +132,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     .load(R.drawable.avt1)
                     .circleCrop()
                     .into(userAvatar);
-            itemPost = itemView.findViewById(R.id.itempost);
-            itemPost.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    handelFocusPost();
-                }
-            });
+
             postImage = itemView.findViewById(R.id.imgPost);
             userName = itemView.findViewById(R.id.txtUserName);
             time = itemView.findViewById(R.id.txtTime);
@@ -147,9 +140,21 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             commentCount = itemView.findViewById(R.id.txtCommentCount);
             btnLike = itemView.findViewById(R.id.btnLike);
             btnComment = itemView.findViewById(R.id.btnComment);
+            itemPost = itemView.findViewById(R.id.itempost);
+            itemPost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    handelFocusPost();
+                }
+
+            });
+        }
+        public void bind(Post post) {
+            this.currentPost = post;
         }
         public void handelFocusPost(){
             Intent intent = new Intent(itemView.getContext(), FocusPost.class);
+            intent.putExtra("post_id", currentPost.getId());
             itemView.getContext().startActivity(intent);
         }
 

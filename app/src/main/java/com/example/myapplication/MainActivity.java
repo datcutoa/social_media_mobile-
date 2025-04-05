@@ -1,13 +1,17 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.myapplication.ui.post.NewPost;
 import com.example.myapplication.ui.message.MessageFragment;
+import com.example.myapplication.ui.post.PostFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,12 +24,33 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         // Mặc định hiển thị MessageFragment khi mở ứng dụng
+//        if (savedInstanceState == null) {
+//            Log.d("MainActivity","fragment_container  + savedInstanceState");
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.fragment_container, new MessageFragment())
+//                    .commit();
+//        }
+        // Mặc định hiển thị PostFragment khi mở ứng dụng
         if (savedInstanceState == null) {
             Log.d("MainActivity","fragment_container  + savedInstanceState");
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new MessageFragment())
+                    .replace(R.id.fragment_container, new PostFragment())
                     .commit();
         }
+
+
+
+        // Đặt sự kiện click cho EditText
+        EditText editText = findViewById(R.id.txtText);
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, NewPost.class);
+                startActivity(intent);
+            }
+        });
+
+
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;

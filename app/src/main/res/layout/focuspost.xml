@@ -14,10 +14,11 @@
         android:gravity="center_vertical">
 
         <Button
+            android:text="Back"
             android:padding="5dp"
             android:id="@+id/btnBack"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/back" />
 
@@ -79,15 +80,13 @@
         android:text="Nội dung bài viết"
         android:padding="12dp"
         android:textSize="16sp"/>
-
     <!-- Ảnh bài viết (nếu có) -->
     <ImageView
         android:id="@+id/imgPost"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:scaleType="centerCrop"
         android:visibility="gone"
-        
         android:layout_marginBottom="8dp"/>
 
     <!-- Thanh chứa các nút Like, Comment -->

@@ -15,6 +15,8 @@ import com.example.myapplication.DAO.SocialNetworkDatabase;
 import com.example.myapplication.Emtity.Post;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.ui.post.PostAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
