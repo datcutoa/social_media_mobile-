@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.DAO.SocialNetworkDatabase;
@@ -18,7 +19,8 @@ import java.util.concurrent.Executors;
 
 public class Login extends AppCompatActivity {
     private EditText edtUsername, edtPassword;
-    private Button btnLogin, btnRegister;
+    private Button btnLogin;
+    private TextView btnRegister;
     private UserDao userDao;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
