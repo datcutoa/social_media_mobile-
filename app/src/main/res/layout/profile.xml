@@ -113,7 +113,7 @@
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="Return"
         android:src="@drawable/back"
-        android:tint="@android:color/back"
+        android:tint="@android:color/white"
         app:layout_anchorGravity="top|start" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
