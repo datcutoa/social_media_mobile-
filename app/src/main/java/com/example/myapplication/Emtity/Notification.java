@@ -30,6 +30,26 @@ public class Notification {
         this.createdAt = createdAt;
     }
 
+    // Constructor không có id (dùng khi thêm mới, id sẽ được Room tự động tạo)
+    public Notification(int userId, String type, int referenceId, String content, boolean readStatus, String createdAt) {
+        this.userId = userId;
+        this.type = type;
+        this.referenceId = referenceId;
+        this.content = content;
+        this.readStatus = readStatus;
+        this.createdAt = createdAt;
+    }
+
+    // Constructor không có id và referenceId (dùng khi referenceId không cần thiết)
+    public Notification(int userId, String type, String content, boolean readStatus, String createdAt) {
+        this.userId = userId;
+        this.type = type;
+        this.referenceId = 0; // Default value if referenceId is not provided
+        this.content = content;
+        this.readStatus = readStatus;
+        this.createdAt = createdAt;
+    }
+
     // Getters and Setters
     public int getId() {
         return id;

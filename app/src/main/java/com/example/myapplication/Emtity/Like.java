@@ -26,6 +26,30 @@ public class Like {
         this.createdAt = createdAt;
     }
 
+    // Constructor không có id (dùng khi thêm mới, id sẽ được Room tự động tạo)
+    public Like(int userId, int postId, int commentId, String createdAt) {
+        this.userId = userId;
+        this.postId = postId;
+        this.commentId = commentId;
+        this.createdAt = createdAt;
+    }
+
+    // Constructor cho like bài post (không có commentId)
+    public Like(int userId, int postId, String createdAt) {
+        this.userId = userId;
+        this.postId = postId;
+        this.commentId = 0; // Default value if liking a post, not a comment
+        this.createdAt = createdAt;
+    }
+
+    // Constructor cho like comment (không có postId)
+    public Like(int userId, int commentId, String createdAt, boolean isCommentLike) {
+        this.userId = userId;
+        this.postId = 0; // Default value if liking a comment, not a post
+        this.commentId = commentId;
+        this.createdAt = createdAt;
+    }
+
     // Getters and Setters
     public int getId() {
         return id;

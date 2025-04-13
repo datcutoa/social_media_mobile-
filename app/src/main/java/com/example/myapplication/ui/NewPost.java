@@ -18,7 +18,7 @@
     import java.util.ArrayList;
 
     public class NewPost extends AppCompatActivity {
-        private  String avtDefault="C:\\SocialMediaMobile\\app\\src\\main\\res\\drawable\\avt1.png";
+//        private  String avtDefault="C:\\SocialMediaMobile\\app\\src\\main\\res\\drawable\\avt1.png";
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {

@@ -1,107 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp"
     android:background="@android:color/white"
-    android:layout_marginBottom="8dp"> <!-- Tạo khoảng cách giữa các bài viết -->
+    android:padding="10dp"
+    android:layout_marginBottom="8dp">
 
     <LinearLayout
-        android:id="@+id/itempost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-        <ImageView
-            android:id="@+id/imgUserAvatar"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:scaleType="centerCrop"
+        android:orientation="vertical">
 
-            android:background="@drawable/circle_shape"
-            />
-
+        <!-- Post Header -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/itempost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/imgUserAvatar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/circle_shape" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="10dp">
+
+                <TextView
+                    android:id="@+id/txtUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:text="Tên người dùng"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:text="Thời gian"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Post Content -->
+        <TextView
+            android:id="@+id/txtContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="Nội dung bài viết"
+            android:paddingTop="5dp" />
+
+        <ImageView
+            android:id="@+id/imgPost"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="5dp"
+            android:visibility="gone" />
+
+        <!-- Like and Comment Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/btnLike"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/like"
+                android:padding="5dp" />
+
+            <TextView
+                android:id="@+id/txtLikeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text="172"
+                android:paddingStart="4dp" />
+
+            <ImageView
+                android:id="@+id/btnComment"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/comment"
+                android:padding="5dp"
+                android:layout_marginStart="16dp" />
+
+            <TextView
+                android:id="@+id/txtCommentCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text="23"
+                android:paddingStart="4dp" />
+        </LinearLayout>
+
+        <!-- Comments Section (Hidden by Default) -->
+        <LinearLayout
+            android:id="@+id/commentsContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="10dp">
+            android:paddingTop="8dp"
+            android:visibility="gone">
 
             <TextView
-                android:id="@+id/txtUserName"
+                android:id="@+id/txtCommentsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Comments"
                 android:textColor="@android:color/black"
-                android:text="Tên người dùng"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/txtTime"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerComments"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:text="Thời gian"
-                android:textSize="12sp" />
+                android:nestedScrollingEnabled="false" />
         </LinearLayout>
+
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/txtContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:text="Nội dung bài viết"
-        android:paddingTop="5dp" />
-
-    <ImageView
-        android:id="@+id/imgPost"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:layout_marginTop="5dp"
-        android:visibility="gone" />
-
-    <!-- Thanh chứa các nút Like, Comment -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="8dp"
-        android:gravity="center">
-
-        <ImageView
-            android:id="@+id/btnLike"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/like"
-            android:padding="5dp"
-             />
-
-        <TextView
-            android:id="@+id/txtLikeCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="172"
-            android:paddingStart="4dp" />
-
-        <ImageView
-            android:id="@+id/btnComment"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/comment"
-            android:padding="5dp"
-
-            android:layout_marginStart="16dp" />
-
-        <TextView
-            android:id="@+id/txtCommentCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="23"
-            android:paddingStart="4dp" />
-    </LinearLayout>
-</LinearLayout>
-
+</androidx.core.widget.NestedScrollView>
