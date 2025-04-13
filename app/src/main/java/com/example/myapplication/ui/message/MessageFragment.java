@@ -1,9 +1,9 @@
 package com.example.myapplication.ui.message;
 
-import static android.app.Activity.RESULT_OK;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,32 +13,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.myapplication.DAO.UserDao;
 import com.example.myapplication.Emtity.Message;
 import com.example.myapplication.Emtity.User;
 import com.example.myapplication.R;
-import com.example.myapplication.data.DataManager;
 import com.example.myapplication.ui.chat.ChatActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 public class MessageFragment extends Fragment {
-    private static final int REQUEST_CODE_CHAT = 1001;
     private RecyclerView recyclerView;
     private MessageListAdapter adapter;
-    private int currentUserId = DataManager.getInstance().getUsers().get(0).getId();
+    private int currentUserId;
 
-
-    public MessageFragment() { }
+    public MessageFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,86 +40,69 @@ public class MessageFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recyclerMessages);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Lấy danh sách tin nhắn từ DataManager
-        List<Message> messages = DataManager.getInstance().getMessages();
-        List<ComponentMessage> conversationList = extractLastMessages(messages);
+        currentUserId = getArguments().getInt("currentUserId", -1); // Lấy ID số
 
-        adapter = new MessageListAdapter(conversationList, componentMessage -> {
+        adapter = new MessageListAdapter(new ArrayList<>(), componentMessage -> {
             Intent intent = new Intent(requireContext(), ChatActivity.class);
             intent.putExtra("currentUserId", currentUserId);
             intent.putExtra("receiverId", componentMessage.getUserId());
-            intent.putExtra("nameReceiver",DataManager.getInstance().getUserById(componentMessage.getUserId()).getName());
-            // Nếu cần gửi thêm dữ liệu (ở đây bạn có thể không cần gửi lại vì DataManager giữ dữ liệu)
-            startActivityForResult(intent, REQUEST_CODE_CHAT);
+            intent.putExtra("nameReceiver", componentMessage.getName());
+            startActivity(intent);
         });
 
         recyclerView.setAdapter(adapter);
+        loadRecentMessages();
         return root;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE_CHAT && resultCode == RESULT_OK && data != null) {
-            // Lấy lại danh sách tin nhắn cập nhật từ DataManager
-            List<Message> updatedMessages = DataManager.getInstance().getMessages();
-            // Xây dựng lại conversation list từ tin nhắn cập nhật
-            List<ComponentMessage> updatedConversationList = extractLastMessages(updatedMessages);
-            // Cập nhật dữ liệu cho adapter
-            adapter.setData(updatedConversationList);
+    private void loadRecentMessages() {
+        DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference("messages");
+        messagesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<ComponentMessage> conversationList = new ArrayList<>();
+                for (DataSnapshot chatSnapshot : snapshot.getChildren()) {
+                    for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
+                        Message message = messageSnapshot.getValue(Message.class);
+                        if (message != null) {
+                            int otherUserId = message.getSenderId() == currentUserId ? message.getReceiverId() : message.getSenderId();
+                            fetchUserInfo(otherUserId, message.getContent(), conversationList);
+                        }
+                    }
 
-        }
-    }
-
-    private List<ComponentMessage> extractLastMessages(List<Message> messages) {
-        Map<Integer, Message> lastMessageMap = new HashMap<>();
-        // Khởi tạo SimpleDateFormat với định dạng "yyyy-MM-dd"
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-
-        for (Message msg : messages) {
-            int otherUserId = (msg.getSenderId() == currentUserId) ? msg.getReceiverId() : msg.getSenderId();
-            // Lấy đối tượng Date của tin nhắn
-            Date msgDate = parseDate(sdf, msg.getCreatedAt());
-
-            // Nếu chưa có tin nhắn nào của user đó, hoặc tin nhắn hiện tại mới hơn tin cũ thì cập nhật
-            if (!lastMessageMap.containsKey(otherUserId)) {
-                lastMessageMap.put(otherUserId, msg);
-            } else {
-                Message existingMsg = lastMessageMap.get(otherUserId);
-                Date existingDate = parseDate(sdf, existingMsg.getCreatedAt());
-                if (msgDate != null && existingDate != null && msgDate.after(existingDate)) {
-                    lastMessageMap.put(otherUserId, msg);
                 }
             }
-        }
 
-        List<ComponentMessage> result = new ArrayList<>();
-        for (Map.Entry<Integer, Message> entry : lastMessageMap.entrySet()) {
-            int userId = entry.getKey();
-            Message lastMsg = entry.getValue();
-            String profilePic = ((DataManager.getInstance().getUserById(userId).getProfilePicture() == null ||
-                    DataManager.getInstance().getUserById(userId).getProfilePicture().isEmpty()))
-                    ? "defaultuser"
-                    : DataManager.getInstance().getUserById(userId).getProfilePicture();
-            result.add(new ComponentMessage(
-                    userId,
-                    DataManager.getInstance().getUserById(userId).getName(),
-                    profilePic,
-                    lastMsg.getContent(),
-                    lastMsg.getCreatedAt()
-            ));
-        }
-        return result;
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Lỗi tải danh sách tin nhắn", error.toException());
+            }
+        });
     }
 
-    // Hàm chuyển đổi chuỗi sang Date
-    private Date parseDate(SimpleDateFormat sdf, String dateString) {
-        try {
-            return sdf.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
+    private void fetchUserInfo(int userId, String lastMessage, List<ComponentMessage> conversationList) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId+"");
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                if (user != null) {
+                    conversationList.add(new ComponentMessage(
+                            user.getId(),
+                            user.getName(),
+                            user.getProfilePicture(),
+                            lastMessage,
+                            "" // Thời gian có thể lấy từ Firebase
+                    ));
+                    adapter.setData(conversationList);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Lỗi tải thông tin user", error.toException());
+            }
+        });
     }
 
 }

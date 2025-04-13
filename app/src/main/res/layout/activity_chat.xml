@@ -52,7 +52,7 @@
 
         <ImageButton
             android:id="@+id/btnSend"
-            android:layout_width="wrap_content"
+            android:layout_width="68dp"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_menu_send" />
     </LinearLayout>

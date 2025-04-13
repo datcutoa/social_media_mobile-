@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -38,6 +39,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation(libs.firebase.database)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
     implementation ("com.github.bumptech.glide:glide:4.15.1")
@@ -60,5 +62,9 @@ dependencies {
     // Glide for image loading
     implementation("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+
+//    Firebase Database Realtime
+    implementation ("com.google.firebase:firebase-database:20.2.2")
+    implementation ("com.google.firebase:firebase-auth:22.1.2")
 }
 

@@ -7,8 +7,8 @@ import java.io.Serializable;
 
 @Entity(tableName = "messages")
 public class Message implements Serializable {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey
+    private String id;
 
     private int senderId;
     private int receiverId;
@@ -21,7 +21,7 @@ public class Message implements Serializable {
     }
 
     // Constructor đầy đủ tham số
-    public Message(int id, int senderId, int receiverId, String content, boolean readStatus, String createdAt) {
+    public Message(String id, int senderId, int receiverId, String content, boolean readStatus, String createdAt) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
@@ -31,11 +31,11 @@ public class Message implements Serializable {
     }
 
     // Getters and Setters
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
