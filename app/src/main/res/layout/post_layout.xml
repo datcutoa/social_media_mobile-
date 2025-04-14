@@ -25,6 +25,7 @@
         android:layout_height="40dp"
         android:layout_margin="12dp"
         android:text="Đăng"
+        android:enabled="true"
         android:textSize="14sp"
         android:textColor="@color/white"
         android:background="@color/blue"
@@ -47,6 +48,7 @@
         app:layout_constraintHorizontal_bias="0.5" />
 
     <!-- Hộp nhập nội dung mở rộng chiều cao, tự nhiên -->
+
     <EditText
         android:id="@+id/edtPostContent"
         android:layout_width="0dp"
@@ -62,6 +64,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtTitle"
+        app:layout_constraintBottom_toTopOf="@id/toolbar" />
+
+    <!-- ImageView hiển thị ảnh bài viết -->
+    <ImageView
+        android:id="@+id/imgPost"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="12dp"
+        android:visibility="gone"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtPostContent"
         app:layout_constraintBottom_toTopOf="@id/toolbar" />
 
     <!-- Thanh công cụ ở dưới hộp nhập nội dung -->

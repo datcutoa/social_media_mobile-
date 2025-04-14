@@ -1,96 +1,133 @@
 package com.example.myapplication;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import com.example.myapplication.Emtity.Message;
+import com.bumptech.glide.Glide;
+import com.example.myapplication.DAO.SocialNetworkDatabase;
 import com.example.myapplication.Emtity.User;
+import com.example.myapplication.ui.NewPost;
+import com.example.myapplication.ui.ProfileActivity;
 import com.example.myapplication.ui.message.MessageFragment;
+import com.example.myapplication.ui.post.PostFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
-    private int currentUserId;
+
+    private SocialNetworkDatabase db;
+    private int currentUserId = 1; // Replace with dynamic user ID from login
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize views
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        ImageButton btnSearch = findViewById(R.id.btnSearch);
+        ImageView imgUserAvatar = findViewById(R.id.imgUserAvt);
+        EditText txtText = findViewById(R.id.txtText);
+        LinearLayout thanhCamXuc = findViewById(R.id.thanhcamxuc);
+        BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
 
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true); // Bật cache offline
-//        addSampleUsers();
-//        addSampleMessages();
+        // Set up Toolbar
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Thread");
+        }
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            String userUid = user.getUid();
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userUid);
+        // Initialize database
+        db = SocialNetworkDatabase.getInstance(this);
 
-            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        currentUserId = snapshot.getValue(Integer.class);
-                        openMessageFragment(currentUserId);
-                    }
-                }
+        // Load user avatar
+        loadUserAvatar(imgUserAvatar);
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("Firebase", "Lỗi lấy ID người dùng", error.toException());
+        // Set click listeners
+        txtText.setOnClickListener(this::showPopup);
+        thanhCamXuc.setOnClickListener(this::showPopup);
+        imgUserAvatar.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            intent.putExtra("userId", currentUserId);
+            startActivity(intent);
+        });
+        btnSearch.setOnClickListener(v -> {
+            Toast.makeText(this, "Search clicked", Toast.LENGTH_SHORT).show();
+        });
+
+        // Set up BottomNavigationView
+        bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                selectedFragment = new PostFragment();
+            } else if (itemId == R.id.nav_messages) {
+                selectedFragment = new MessageFragment();
+            } else if (itemId == R.id.nav_profile) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                intent.putExtra("userId", currentUserId);
+                startActivity(intent);
+                return true;
+            }
+
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment)
+                        .commit();
+            }
+            return true;
+        });
+
+        // Default fragment
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new PostFragment())
+                    .commit();
+        }
+    }
+
+    private void showPopup(View anchorView) {
+        Intent intent = new Intent(this, NewPost.class);
+        intent.putExtra("userId", currentUserId);
+        startActivity(intent);
+    }
+
+    private void loadUserAvatar(ImageView imgUserAvatar) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            User user = db.userDao().getUserById(currentUserId);
+            runOnUiThread(() -> {
+                if (user != null && user.getProfilePicture() != null) {
+                    Glide.with(this)
+                            .load(user.getProfilePicture())
+                            .circleCrop()
+                            .placeholder(R.drawable.avt1)
+                            .error(R.drawable.avt1)
+                            .into(imgUserAvatar);
+                } else {
+                    Glide.with(this)
+                            .load(R.drawable.avt1)
+                            .circleCrop()
+                            .into(imgUserAvatar);
                 }
             });
-        }
-//        else {
-//            startActivity(new Intent(this, LoginActivity.class));
-//            finish();
-//        }
+        });
     }
 
-    private void openMessageFragment(int userId) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("currentUserId", userId);
-        MessageFragment messageFragment = new MessageFragment();
-        messageFragment.setArguments(bundle);
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, messageFragment)
-                .commit();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUserAvatar(findViewById(R.id.imgUserAvt));
     }
-
-    private void addSampleUsers() {
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-
-        User user1 = new User(1, "user1", "password123", "user1@gmail.com", "User One",
-                "Hello, I am User One", "cover1.jpg", "profile1.jpg", "Male", "1998-01-01", "2025-04-02");
-        User user2 = new User(2, "user2", "password123", "user2@gmail.com", "User Two",
-                "Hello, I am User Two", "cover2.jpg", "profile2.jpg", "Female", "1999-02-02", "2025-04-02");
-
-        usersRef.child(String.valueOf(user1.getId())).setValue(user1);
-        usersRef.child(String.valueOf(user2.getId())).setValue(user2);
-    }
-    private void addSampleMessages() {
-        DatabaseReference messagesRef = FirebaseDatabase.getInstance().getReference("messages");
-
-        Message msg1 = new Message("msg_1", 1, 2, "Hello!", false, "2025-04-02 10:00:00");
-        Message msg2 = new Message("msg_2", 2, 1, "Hi!", false, "2025-04-02 10:05:00");
-
-        messagesRef.child(msg1.getId()).setValue(msg1);
-        messagesRef.child(msg2.getId()).setValue(msg2);
-    }
-
 
 }

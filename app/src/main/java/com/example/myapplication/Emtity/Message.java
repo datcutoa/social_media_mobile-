@@ -2,12 +2,13 @@ package com.example.myapplication.Emtity;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
+import androidx.annotation.NonNull;
 import java.io.Serializable;
 
 @Entity(tableName = "messages")
 public class Message implements Serializable {
     @PrimaryKey
+    @NonNull
     private String id;
 
     private int senderId;

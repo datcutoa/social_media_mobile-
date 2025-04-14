@@ -13,7 +13,8 @@ import java.util.List;
 public interface PostDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertPost(Post post);
-
+    @Query("SELECT * FROM post WHERE id = :postId")
+    Post getPostById(int postId);
     @Query("SELECT * FROM post ")
     List<Post> getAllPosts();
 
