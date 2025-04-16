@@ -5,7 +5,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.example.myapplication.Emtity.Message;
+import com.example.myapplication.Entity.Message;
 
 import java.util.List;
 

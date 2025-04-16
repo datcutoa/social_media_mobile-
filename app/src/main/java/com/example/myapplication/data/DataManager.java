@@ -2,8 +2,8 @@ package com.example.myapplication.data;
 
 import android.content.Context;
 import com.example.myapplication.DAO.SocialNetworkDatabase;
-import com.example.myapplication.Emtity.Message;
-import com.example.myapplication.Emtity.User;
+import com.example.myapplication.Entity.Message;
+import com.example.myapplication.Entity.User;
 import java.util.List;
 import java.util.concurrent.Executors;
 

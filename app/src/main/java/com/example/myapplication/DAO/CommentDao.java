@@ -4,7 +4,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.example.myapplication.Emtity.Comment;
+import com.example.myapplication.Entity.Comment;
 
 import java.util.List;
 

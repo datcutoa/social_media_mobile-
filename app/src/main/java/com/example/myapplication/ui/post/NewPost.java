@@ -16,10 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.DAO.PostDao;
 import com.example.myapplication.DAO.SocialNetworkDatabase;
-import com.example.myapplication.Emtity.Post;
+import com.example.myapplication.Entity.Post;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
-import com.example.myapplication.ui.post.FocusPost;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

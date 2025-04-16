@@ -5,7 +5,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.example.myapplication.Emtity.Follow;
+import com.example.myapplication.Entity.Follow;
 
 import java.util.List;
 

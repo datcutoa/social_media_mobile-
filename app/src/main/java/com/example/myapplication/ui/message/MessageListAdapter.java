@@ -40,14 +40,29 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ComponentMessage item = data.get(position);
+        Log.d("MessageListAdapter","item Name:"+item.getName()+" +LastMessage:"+item.getLastMessage()+" +userId:"+item.getUserId());
         holder.tvName.setText(item.getName());
-        holder.tvLastMessage.setText(item.getLastMessage());
-        holder.imgProfile.getContext().getResources().getIdentifier(item.getProfilePicture(), "drawable",holder.imgProfile.getContext().getPackageName());
+        // Hiển thị tin nhắn
+        if (!item.getLastMessage().isEmpty()) {
 
+            holder.tvLastMessage.setText(item.getLastMessage());
+        } else {
+
+            holder.tvLastMessage.setText("Chưa có tin nhắn nào");
+        }
+
+        // Tải ảnh profile bằng Glide
+        if (item.getProfilePicture() != null && !item.getProfilePicture().isEmpty()) {
+            Glide.with(holder.imgProfile.getContext())
+                    .load(item.getProfilePicture())
+                    .placeholder(R.drawable.defaultuser)   // ảnh hiển thị trong lúc tải
+                    .error(R.drawable.defaultuser)         // ảnh fallback khi lỗi
+                    .into(holder.imgProfile);
+        } else {
+            holder.imgProfile.setImageResource(R.drawable.defaultuser);
+        }
 
         holder.tvTime.setText(item.getLastMessageTime());
-
-        // Gán sự kiện click vào itemView
         holder.itemView.setOnClickListener(v -> {
             Log.d("MessageListAdapter", "Click event triggered at position: " + position);
             if (listener != null) {
@@ -55,10 +70,10 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             }
         });
 
-        // Đảm bảo item không bị chặn click
         holder.itemView.setClickable(true);
         holder.itemView.setFocusable(false);
     }
+
 
 
 
@@ -71,9 +86,11 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     }
 
     public void setData(List<ComponentMessage> newData) {
+        Log.d("MessageListAdapter", "Cập nhật dữ liệu với số lượng: " + newData.size());
         this.data = newData;
         notifyDataSetChanged();
     }
+
 
 
     static class ViewHolder extends RecyclerView.ViewHolder {

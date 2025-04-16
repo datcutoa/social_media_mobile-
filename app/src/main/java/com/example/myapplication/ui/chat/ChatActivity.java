@@ -1,9 +1,7 @@
 package com.example.myapplication.ui.chat;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -15,9 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.Emtity.Message;
-import com.example.myapplication.ui.message.MessageAdapter;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.myapplication.Entity.Message;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +25,7 @@ import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private MessageAdapter messageAdapter;
+    private ChatAdapter messageAdapter;
     private List<Message> messageList;
     private EditText edtMessage;
     private ImageButton btnSend;
@@ -56,7 +52,7 @@ public class ChatActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         messageList = new ArrayList<>();
-        messageAdapter = new MessageAdapter(messageList, currentUserId, null);
+        messageAdapter = new ChatAdapter(messageList, currentUserId, null);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(messageAdapter);
 

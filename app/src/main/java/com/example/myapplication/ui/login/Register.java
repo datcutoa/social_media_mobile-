@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.DAO.SocialNetworkDatabase;
 import com.example.myapplication.DAO.UserDao;
-import com.example.myapplication.Emtity.User;
+import com.example.myapplication.Entity.User;
 import com.example.myapplication.R;
 
 import java.util.concurrent.ExecutorService;

@@ -1,4 +1,4 @@
-package com.example.myapplication.Emtity;
+package com.example.myapplication.Entity;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 @Entity(tableName = "post")

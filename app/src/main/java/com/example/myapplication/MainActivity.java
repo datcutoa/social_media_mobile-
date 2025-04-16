@@ -1,133 +1,188 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 
-import com.bumptech.glide.Glide;
+
 import com.example.myapplication.DAO.SocialNetworkDatabase;
-import com.example.myapplication.Emtity.User;
-import com.example.myapplication.ui.NewPost;
-import com.example.myapplication.ui.ProfileActivity;
+import com.example.myapplication.Entity.Friendship;
+import com.example.myapplication.Entity.User;
 import com.example.myapplication.ui.message.MessageFragment;
 import com.example.myapplication.ui.post.PostFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.room.Room;
+
+import java.util.List;
 import java.util.concurrent.Executors;
 
-public class MainActivity extends AppCompatActivity {
 
-    private SocialNetworkDatabase db;
-    private int currentUserId = 1; // Replace with dynamic user ID from login
+public class MainActivity extends AppCompatActivity {
+    private SocialNetworkDatabase database;
+    private int currentUserId;
+    private ConstraintLayout mainContentLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize views
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        ImageButton btnSearch = findViewById(R.id.btnSearch);
-        ImageView imgUserAvatar = findViewById(R.id.imgUserAvt);
-        EditText txtText = findViewById(R.id.txtText);
-        LinearLayout thanhCamXuc = findViewById(R.id.thanhcamxuc);
-        BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
+//        logout();
 
-        // Set up Toolbar
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Thread");
-        }
+        mainContentLayout = findViewById(R.id.mainContentLayout);
 
-        // Initialize database
-        db = SocialNetworkDatabase.getInstance(this);
 
-        // Load user avatar
-        loadUserAvatar(imgUserAvatar);
+        // Lấy userId từ Intent
+        currentUserId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getInt("userId", -1);
+//        try {
+            database = SocialNetworkDatabase.getInstance(this);
+            Log.d("MainActivity", "Database instance ok");
+//            createTestFriendshipRoom(database,1);
+//            Log.d("MainActivity", "createTestFriendshipRoom ok");
+//
+            fetchUserInfo(database);
+//        } catch (Exception e) {
+//            Log.d("MainActivity","Lỗi database: " + e.getMessage());
+//            e.printStackTrace();
+//            throw new RuntimeException(e);
+//        }
+//
+//
+//        Log.d("MainActivity","Đã tạo friendship");
 
-        // Set click listeners
-        txtText.setOnClickListener(this::showPopup);
-        thanhCamXuc.setOnClickListener(this::showPopup);
-        imgUserAvatar.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-            intent.putExtra("userId", currentUserId);
-            startActivity(intent);
-        });
-        btnSearch.setOnClickListener(v -> {
-            Toast.makeText(this, "Search clicked", Toast.LENGTH_SHORT).show();
-        });
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // Set up BottomNavigationView
-        bottomNavigation.setOnNavigationItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_home) {
-                selectedFragment = new PostFragment();
-            } else if (itemId == R.id.nav_messages) {
-                selectedFragment = new MessageFragment();
+                openPostFragment();
+                return true;
+
             } else if (itemId == R.id.nav_profile) {
-                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                intent.putExtra("userId", currentUserId);
-                startActivity(intent);
+                // Hiển thị profile fragment
+                return true;
+
+            } else if (itemId == R.id.nav_messages) {
+                if (currentUserId != -1) {
+                    Log.e("MainActivity", "qua MessageFragment với currentUserId:" +currentUserId);
+
+                    openMessageFragment(currentUserId);
+                } else {
+                    Log.e("MainActivity", "qua MessageFragment thất bai");
+
+                    Intent intent = new Intent(MainActivity.this, com.example.myapplication.ui.login.Login.class);
+                    startActivity(intent);
+                    finish();
+                }
+                return true;
+
+            } else if (itemId == R.id.navigation_notifications) {
+                // Hiển thị notifications fragment
                 return true;
             }
 
-            if (selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, selectedFragment)
-                        .commit();
-            }
-            return true;
+            return false;
         });
 
-        // Default fragment
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new PostFragment())
-                    .commit();
+
+    }
+    public void openPostFragment() {
+        Log.e("MainActivity", "Mở PostFragment");
+
+        // Hiện lại layout chính
+        mainContentLayout.setVisibility(View.VISIBLE);
+
+        PostFragment fragment = new PostFragment();
+
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+
+    public void openMessageFragment(int currentUserId) {
+        Log.e("MainActivity", "Mở MessageFragment với currentUserId:" + currentUserId);
+
+        // Ẩn layout chính khi vào message
+        mainContentLayout.setVisibility(View.GONE);
+
+        MessageFragment fragment = new MessageFragment();
+        Bundle args = new Bundle();
+        args.putInt("currentUserId", currentUserId);
+        fragment.setArguments(args);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+//    hàm logout
+private void logout() {
+        Log.d("MainActivity","logout user id"+currentUserId);
+    SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+    SharedPreferences.Editor editor = sharedPreferences.edit();
+    editor.remove("userId");
+    editor.apply();
+
+}
+
+//user1
+//    hoanghuyle
+//    Admin@123
+private void fetchUserInfo(SocialNetworkDatabase db) {
+    Executors.newSingleThreadExecutor().execute(() -> {
+        List<User> allUsers = db.userDao().getAllUsers();
+        for (User u : allUsers) {
+            Log.d("MainActivity", "User: " + u.getId() + " - " + u.getUsername());
         }
-    }
 
-    private void showPopup(View anchorView) {
-        Intent intent = new Intent(this, NewPost.class);
-        intent.putExtra("userId", currentUserId);
-        startActivity(intent);
-    }
+    });
+}
 
-    private void loadUserAvatar(ImageView imgUserAvatar) {
+
+
+    private void createTestFriendshipRoom(SocialNetworkDatabase db, int user1Id) {
         Executors.newSingleThreadExecutor().execute(() -> {
-            User user = db.userDao().getUserById(currentUserId);
-            runOnUiThread(() -> {
-                if (user != null && user.getProfilePicture() != null) {
-                    Glide.with(this)
-                            .load(user.getProfilePicture())
-                            .circleCrop()
-                            .placeholder(R.drawable.avt1)
-                            .error(R.drawable.avt1)
-                            .into(imgUserAvatar);
-                } else {
-                    Glide.with(this)
-                            .load(R.drawable.avt1)
-                            .circleCrop()
-                            .into(imgUserAvatar);
-                }
-            });
+//            int user2Id = 9999;
+//            User user2 = new User(
+//                    user2Id,
+//                    "user2",
+//                    "password123",
+//                    "user2@example.com",
+//                    "User Two",
+//                    "This is User 2's bio",
+//                    "default_cover.jpg",
+//                    "default_avatar.jpg",
+//                    "male",
+//                    "2000-01-01",
+//                    "2025-04-14"
+//            );
+//
+//            db.userDao().insertUser(user2);
+
+            String createdAt = "2025-04-14";
+            Friendship friendship1 = new Friendship(10000, 9999, "accepted", createdAt);
+            Friendship friendship2 = new Friendship(9999, 10000, "accepted", createdAt);
+
+            db.friendshipDao().insertFriendship(friendship1);
+            db.friendshipDao().insertFriendship(friendship2);
+
+            Log.d("TestFriendship", "Đã thêm user2 và kết bạn với user1");
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadUserAvatar(findViewById(R.id.imgUserAvt));
-    }
+
+
 
 }

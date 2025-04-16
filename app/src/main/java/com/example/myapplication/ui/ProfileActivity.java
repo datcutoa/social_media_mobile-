@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.DAO.SocialNetworkDatabase;
-import com.example.myapplication.Emtity.Post;
+import com.example.myapplication.Entity.Post;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import java.util.ArrayList;

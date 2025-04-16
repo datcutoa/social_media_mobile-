@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.message;
+package com.example.myapplication.ui.chat;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.Emtity.Message;
+import com.example.myapplication.Entity.Message;
 
 import java.util.List;
 
-public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_LEFT = 0;
     private static final int VIEW_TYPE_RIGHT = 1;
@@ -22,7 +22,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private OnItemClickListener listener;
 
 
-    public MessageAdapter(List<Message> messages, int currentUserId, OnItemClickListener listener) {
+    public ChatAdapter(List<Message> messages, int currentUserId, OnItemClickListener listener) {
         this.messages = messages;
         this.currentUserId = currentUserId;
         this.listener = listener;

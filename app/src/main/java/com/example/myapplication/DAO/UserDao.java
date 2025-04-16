@@ -5,7 +5,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.example.myapplication.Emtity.User;
+import com.example.myapplication.Entity.User;
 
 import java.util.List;
 

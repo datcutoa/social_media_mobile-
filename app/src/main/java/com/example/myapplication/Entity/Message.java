@@ -1,8 +1,9 @@
-package com.example.myapplication.Emtity;
+package com.example.myapplication.Entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 @Entity(tableName = "messages")

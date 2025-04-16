@@ -1,7 +1,5 @@
 package com.example.myapplication.ui;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +17,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.DAO.CommentDao;
 import com.example.myapplication.DAO.SocialNetworkDatabase;
 import com.example.myapplication.DAO.UserDao;
-import com.example.myapplication.Emtity.Comment;
-import com.example.myapplication.Emtity.Post;
-import com.example.myapplication.Emtity.User;
+import com.example.myapplication.Entity.Comment;
+import com.example.myapplication.Entity.Post;
+import com.example.myapplication.Entity.User;
 import com.example.myapplication.R;
 
 import java.util.List;
