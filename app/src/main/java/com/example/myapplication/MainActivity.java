@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 //        try {
             database = SocialNetworkDatabase.getInstance(this);
             Log.d("MainActivity", "Database instance ok");
-//            createTestFriendshipRoom(database,1);
+//            createTestFriendshipRoom(database);
 //            Log.d("MainActivity", "createTestFriendshipRoom ok");
 //
             fetchUserInfo(database);
@@ -137,9 +137,7 @@ private void logout() {
 
 }
 
-//user1
-//    hoanghuyle
-//    Admin@123
+
 private void fetchUserInfo(SocialNetworkDatabase db) {
     Executors.newSingleThreadExecutor().execute(() -> {
         List<User> allUsers = db.userDao().getAllUsers();
@@ -152,28 +150,44 @@ private void fetchUserInfo(SocialNetworkDatabase db) {
 
 
 
-    private void createTestFriendshipRoom(SocialNetworkDatabase db, int user1Id) {
+    private void createTestFriendshipRoom(SocialNetworkDatabase db) {
         Executors.newSingleThreadExecutor().execute(() -> {
-//            int user2Id = 9999;
-//            User user2 = new User(
-//                    user2Id,
-//                    "user2",
-//                    "password123",
-//                    "user2@example.com",
-//                    "User Two",
-//                    "This is User 2's bio",
-//                    "default_cover.jpg",
-//                    "default_avatar.jpg",
-//                    "male",
-//                    "2000-01-01",
-//                    "2025-04-14"
-//            );
-//
-//            db.userDao().insertUser(user2);
+            int user1Id = 1;
+            User user1 = new User(
+                    user1Id,
+                    "user1",
+                    "password123",
+                    "user1@example.com",
+                    "User One",
+                    "This is User 1's bio",
+                    "default_cover.jpg",
+                    "default_avatar.jpg",
+                    "male",
+                    "2000-01-01",
+                    "2025-04-14"
+            );
+
+            db.userDao().insertUser(user1);
+            int user2Id = 2;
+            User user2 = new User(
+                    user2Id,
+                    "user2",
+                    "password123",
+                    "user2@example.com",
+                    "User Two",
+                    "This is User 2's bio",
+                    "default_cover.jpg",
+                    "default_avatar.jpg",
+                    "male",
+                    "2000-01-01",
+                    "2025-04-14"
+            );
+
+            db.userDao().insertUser(user2);
 
             String createdAt = "2025-04-14";
-            Friendship friendship1 = new Friendship(10000, 9999, "accepted", createdAt);
-            Friendship friendship2 = new Friendship(9999, 10000, "accepted", createdAt);
+            Friendship friendship1 = new Friendship(1, 2, "accepted", createdAt);
+            Friendship friendship2 = new Friendship(2, 1, "accepted", createdAt);
 
             db.friendshipDao().insertFriendship(friendship1);
             db.friendshipDao().insertFriendship(friendship2);
