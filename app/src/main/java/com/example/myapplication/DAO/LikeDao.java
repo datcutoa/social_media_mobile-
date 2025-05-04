@@ -16,4 +16,8 @@ public interface LikeDao {
 
     @Query("SELECT * FROM likes WHERE postId = :postId")
     List<Like> getLikesByPost(int postId);
+
+    @Query("DELETE FROM likes")
+    void deleteAll();
+
 }

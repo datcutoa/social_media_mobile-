@@ -15,4 +15,8 @@ public interface CommentDao {
 
     @Query("SELECT * FROM comments WHERE postId = :postId")
     List<Comment> getCommentsByPost(int postId);
+
+    @Query("DELETE FROM comments")
+    void deleteAll();
+
 }

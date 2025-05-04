@@ -36,5 +36,9 @@ public interface FriendshipDao {
     @Query("DELETE FROM friendships")
     void deleteAllFriendships();
 
+    @Query("DELETE FROM friendships")
+    void deleteAll();
+
+
 
 }
